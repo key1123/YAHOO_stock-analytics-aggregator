@@ -1,0 +1,120 @@
+
+---
+
+### `GLOSSARY.md`
+
+```markdown
+# Glossary of Calculations, Fields, and Functions
+
+## Quote Data
+
+- **mark_price**:  
+  *Definition*: Midpoint between bid and ask prices.  
+  *Formula*: (bid + ask) / 2
+
+- **net_change**:  
+  *Definition*: Change in price from previous close to last traded price.  
+  *Formula*: last_price - close_price
+
+- **percent_change**:  
+  *Definition*: % change from previous close to last traded price.  
+  *Formula*: (net_change / close_price) * 100
+
+## Option Data
+
+- **mark_price_option**:  
+  *Definition*: Midpoint of option bid and ask  
+  *Formula*: (bid + ask) / 2
+
+- **intrinsic_value_call**:  
+  *Definition*: Value of call if exercised now  
+  *Formula*: max(last_price - strike_price, 0)
+
+- **intrinsic_value_put**:  
+  *Definition*: Value of put if exercised now  
+  *Formula*: max(strike_price - last_price, 0)
+
+- **extrinsic_value**:  
+  *Definition*: Option price minus intrinsic value (time value)  
+  *Formula*: option_price - intrinsic_value
+
+- **covered_return**:  
+  *Definition*: Annualized return for covered call  
+  *Formula*: (extrinsic / mark_price) * (365 / days_to_expiration)
+
+- **return_on_capital**:  
+  *Definition*: Return on capital deployed  
+  *Formula*: (mark_price * dv / -bp_effect) * (365 / days_to_expiration)
+
+- **return_on_risk**:  
+  *Definition*: Annualized return on risk  
+  *Formula*: (mark_price / max_risk) * (365 / days_to_expiration)
+
+## Volatility Data
+
+- **volatility_difference**:  
+  *Definition*: Difference between front and back implied volatilities  
+  *Formula*: front_vol - back_vol
+
+- **weighted_back_volatility**:  
+  *Definition*: Weighted calculation of volatility for back period  
+  *Formula*: sqrt((back_vol² × t2 - front_vol² × t1) / (t2 - t1))
+
+- **norm_cdf(x)**:  
+  *Definition*: Normal cumulative distribution function at x
+
+- **expected_move**:  
+  *Definition*: Projected price movement based on volatility  
+  *Formula*: last_price × exp(volatility² / 2) × (2 × norm_cdf(volatility) - 1)
+
+## Fundamental Data
+
+- **pe_ratio**:  
+  *Definition*: Price to earnings ratio  
+  *Formula*: last_price / earnings_per_share
+
+- **dividend_yield**:  
+  *Definition*: Annualized dividend yield  
+  *Formula*: (dividend × freq_multiplier) / last_price  
+  (freq_multiplier: 1 = annual, 4 = quarterly, 12 = monthly)
+
+- **market_cap**:  
+  *Definition*: Market capitalization  
+  *Formula*: last_price × shares_outstanding
+
+## Volume Data
+
+- **put_call_ratio**:  
+  *Definition*: Put volume divided by call volume  
+  *Formula*: put_volume / call_volume
+
+## Historical Data
+
+- **historical_volatility**:  
+  *Definition*: Annualized volatility from log returns  
+  *Formula*: std(ln(Pₜ/Pₜ₋₁)) × sqrt(252)
+
+## Analytics Functions
+
+- **compute_risk_score**:  
+  *Definition*: Risk score based on return_on_risk and historical_volatility  
+  *Formula*: return_on_risk / (historical_volatility + 1e-6)
+
+- **compute_custom_risk_score**:  
+  *Definition*: Adjusted risk score factoring in put-call ratio
+
+- **compute_trade_signal**:  
+  *Definition*: Simple trade recommendation (BUY/SELL/HOLD/BUY_BREAKOUT) based on RSI, moving averages, resistance, etc.
+
+## Output Fields (CSV/JSON)
+
+- Ticker, Mark Price, Net Change, % Change, Last Price, Previous Close, Volume, and all analytics above.
+
+---
+
+## Key Libraries
+
+- `pandas`: DataFrame loading and CSV output
+- `numpy`: Numeric operations, log returns, std dev
+- `yfinance`: Fetching Yahoo Finance market data
+- `math`, `json`, `csv`: Python standard libraries for calculations and I/O
